@@ -9,7 +9,7 @@ const postRouter = require('./postRouter');
 
 
 // set up endpoint for urls
-server.use('/', postRouter)
+server.use('/api/posts', postRouter)
 
 //set up API port and server is listening
 const port = 5000;
