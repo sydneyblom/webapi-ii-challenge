@@ -86,11 +86,6 @@ postRouter.post("/", (req, res) => {
             console.log("insert post", posts);
             res.status(201).json(posts);
           })
-          .catch(error => {
-            res.status(404).json({
-              error: "The post with the specified id does not exist."
-            });
-          });
       })
       .catch(error => {
         res.status(500).json({
@@ -107,15 +102,15 @@ postRouter.post("/:id/comments", (req, res) => {
   const comment = req.body;
   comment.post_id = postId;
 
+  if (!comment.text) {
+    res
+      .status(400)
+      .json({ errorMessage: "Please provide text for the comment." });
+  } else {
   post
     .findById(postId)
     .then(posts => {
       if (posts && posts.length) {
-        if (!comment.text) {
-          res
-            .status(400)
-            .json({ errorMessage: "Please provide text for the comment." });
-        } else {
           post
             .insertComment(comment)
             .then(commentObject => res.status(201).json(commentObject))
@@ -126,7 +121,7 @@ postRouter.post("/:id/comments", (req, res) => {
               })
             );
         }
-      } else {
+       else {
         res
           .status(404)
           .json({ message: "The post with the specified ID does not exist." });
@@ -137,6 +132,7 @@ postRouter.post("/:id/comments", (req, res) => {
         error: "The post information could not be retrieved."
       });
     });
+}
 });
 
 //PUT	/api/posts/:id
@@ -171,13 +167,13 @@ postRouter.put("/:id", (req, res) => {
   postRouter.delete('/:id', (req, res) => {
     const postId = req.params.id;
     post.remove(postId)
-    .then (posts => {
-        if(posts && posts.length){
+    .then (deletePost => {
+        if(deletePost === 0){
             res.status(404).json( {message: 'The post with the specified ID does not exist.'})
            
         }
         else {
-            res.status(204).json( {message: 'The post was successfully deleted.'} );
+            res.status(200).json( {message: 'The post was successfully deleted.'} );
             
         }
     })

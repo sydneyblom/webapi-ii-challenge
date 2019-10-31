@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 //importing express
 const express = require('express');
 //creating the server invoking express
@@ -12,7 +14,7 @@ const postRouter = require('./postRouter');
 server.use('/api/posts', postRouter)
 
 //set up API port and server is listening
-const port = 5000;
-server.listen(port, ()=> console.log(`API running on port ${port}`));
+const port = process.env.PORT;
+server.listen(port, ()=> console.log(`Server Running on http://localhost:${port}`));
 
 module.exports = server;
